@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { FilterCheckIcon } from '~/assets/icons'
 import { Button } from '~/components/ui/button'
@@ -53,8 +53,11 @@ const Filter = ({ setCurrentStep, handleFilter, loading }: IFilterProps) => {
     }
   }
 
+  // Reset DGA and analysisCondition when equipment change
+  const prevEquipmentRef = useRef<string | null>(null)
+
   useEffect(() => {
-    if (!equipmentSelected) {
+    if (prevEquipmentRef.current !== equipmentSelected) {
       setAnalysisCondition(null)
 
       setDgaState({
@@ -62,9 +65,11 @@ const Filter = ({ setCurrentStep, handleFilter, loading }: IFilterProps) => {
         values: DGA_INITIAL_FILTER_SAMPLE_DATA
       })
     }
+
+    prevEquipmentRef.current = equipmentSelected
   }, [equipmentSelected])
 
-  // Reset DGA khi analysisCondition thay đổi
+  // Reset DGA when analysisCondition change
   useEffect(() => {
     if (!isAnalysisConditionValid(analysisCondition)) {
       setDgaState({

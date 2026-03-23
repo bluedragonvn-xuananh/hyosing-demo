@@ -88,7 +88,7 @@ const FormPromptMessage = ({ setListMessagePrompt, response, setCurrentStep, cur
 
       // 👇 stream
       await commonHelper.streamText({
-        text: fullText, // ✅ đúng
+        text: fullText,
         speed: 30,
         onUpdate: (length: number) => {
           setListMessagePrompt((prev) =>
@@ -119,7 +119,7 @@ const FormPromptMessage = ({ setListMessagePrompt, response, setCurrentStep, cur
         )
       )
     } finally {
-      // ✅ đảm bảo luôn unlock
+      // Make sure unlock
       setIsTyping(false)
     }
   }

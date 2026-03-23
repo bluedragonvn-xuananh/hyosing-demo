@@ -90,7 +90,10 @@ const DGAInput = ({ listInitialDGA, onChange, disabled }: IDGAInputProps) => {
           }
 
           return (
-            <div key={item.id} className={cn('p-4 border rounded-[10px] space-y-1.5', classStatus)}>
+            <div
+              key={item.id}
+              className={cn('p-4 border rounded-[10px] space-y-1.5 transition-all duration-500 ease-out', classStatus)}
+            >
               <div className='flex items-center justify-between relative'>
                 <h3 className='font-medium text-xs leading-[15px] -tracking-[0.5%] text-[#333333]'>{item.title}</h3>
                 {status === 'DANGER' && (

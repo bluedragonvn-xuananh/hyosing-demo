@@ -49,7 +49,7 @@ const EquipmentSelection = ({ equipmentSelected, setEquipmentSelected }: IEquipm
             <div
               key={index}
               className={cn(
-                'p-3 bg-white rounded-[10px] border border-[#DADDE6] space-y-[5px] cursor-pointer',
+                'p-3 bg-white rounded-[10px] border border-[#DADDE6] space-y-[5px] cursor-pointer transition-all duration-300 ease-out',
                 isSelected && 'border-[#0062FF] bg-[#E2F0F9] shadow-[0px_0px_8px_0px_rgba(0,98,255,0.25)]'
               )}
               onClick={() => handleSelectEquipment(item.title)}
