@@ -24,6 +24,9 @@ const Filter = ({ setCurrentStep, handleFilter, loading }: IFilterProps) => {
     values: DGA_INITIAL_FILTER_SAMPLE_DATA
   })
 
+  const prevEquipmentRef = useRef<string | null>(null)
+  const prevAnalysisRef = useRef<any>(null)
+
   const isAnalysisConditionValid = (condition: any) => {
     if (!condition) return false
     const keys = ['baseDate', 'historyPeriod', 'algorithm', 'analysisMode']
@@ -54,34 +57,52 @@ const Filter = ({ setCurrentStep, handleFilter, loading }: IFilterProps) => {
   }
 
   // Reset DGA and analysisCondition when equipment change
-  const prevEquipmentRef = useRef<string | null>(null)
 
   useEffect(() => {
     if (prevEquipmentRef.current !== equipmentSelected) {
       setAnalysisCondition(null)
 
       setDgaState({
-        listInitial: DGA_INITIAL_FILTER_SAMPLE_DATA,
-        values: DGA_INITIAL_FILTER_SAMPLE_DATA
+        listInitial: [...DGA_INITIAL_FILTER_SAMPLE_DATA],
+        values: [...DGA_INITIAL_FILTER_SAMPLE_DATA]
       })
     }
 
     prevEquipmentRef.current = equipmentSelected
   }, [equipmentSelected])
 
-  // Reset DGA when analysisCondition change
   useEffect(() => {
-    if (!isAnalysisConditionValid(analysisCondition)) {
+    const prev = prevAnalysisRef.current
+    const current = analysisCondition
+
+    const prevValid = isAnalysisConditionValid(prev)
+    const currentValid = isAnalysisConditionValid(current)
+
+    // Case 1: invalid -> valid
+    if (!prevValid && currentValid) {
       setDgaState({
-        listInitial: DGA_INITIAL_FILTER_SAMPLE_DATA,
-        values: DGA_INITIAL_FILTER_SAMPLE_DATA
-      })
-    } else {
-      setDgaState({
-        listInitial: DGA_NEXT_FILTER_SAMPLE_DATA,
-        values: DGA_NEXT_FILTER_SAMPLE_DATA
+        listInitial: [...DGA_NEXT_FILTER_SAMPLE_DATA],
+        values: [...DGA_NEXT_FILTER_SAMPLE_DATA]
       })
     }
+
+    // Case 2: valid -> valid nhưng value thay đổi
+    if (prevValid && currentValid) {
+      const changed =
+        prev.baseDate !== current.baseDate ||
+        prev.historyPeriod !== current.historyPeriod ||
+        prev.algorithm !== current.algorithm ||
+        prev.analysisMode !== current.analysisMode
+
+      if (changed) {
+        setDgaState({
+          listInitial: [...DGA_NEXT_FILTER_SAMPLE_DATA],
+          values: [...DGA_NEXT_FILTER_SAMPLE_DATA]
+        })
+      }
+    }
+
+    prevAnalysisRef.current = current
   }, [analysisCondition])
 
   return (

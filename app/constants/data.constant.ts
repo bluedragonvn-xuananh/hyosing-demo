@@ -108,6 +108,10 @@ export const DATA = {
     {
       label: '2026-03-11',
       value: '2026-03-11'
+    },
+    {
+      label: '2026-04-11',
+      value: '2026-04-11'
     }
   ],
   GET_ANALYSIS_HISTORY_PERIOD: () => [

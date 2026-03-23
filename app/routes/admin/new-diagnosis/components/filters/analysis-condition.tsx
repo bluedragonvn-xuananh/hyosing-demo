@@ -21,15 +21,29 @@ const AnalysisCondition = ({ analysisCondition, setAnalysisCondition, disabled }
   })
   const { t } = useAppTranslations()
 
+  // const handleChange = (key: keyof typeof formValues) => (option: any) => {
+  //   const newValue = option?.value ?? null
+  //   const newFormValues = {
+  //     ...formValues,
+  //     [key]: newValue
+  //   }
+
+  //   setFormValues(newFormValues)
+
+  //   setAnalysisCondition(newFormValues)
+  // }
+
   const handleChange = (key: keyof typeof formValues) => (option: any) => {
     const newValue = option?.value ?? null
+
+    if (formValues[key] === newValue) return
+
     const newFormValues = {
       ...formValues,
       [key]: newValue
     }
 
     setFormValues(newFormValues)
-
     setAnalysisCondition(newFormValues)
   }
 
