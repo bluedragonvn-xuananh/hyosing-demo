@@ -10,13 +10,13 @@ import DGAInput, { type IDGAItem } from './filters/dga-input'
 import EquipmentSelection from './filters/equipment-selection'
 
 interface IFilterProps {
-  setCurrentStep: React.Dispatch<React.SetStateAction<1 | 2 | 3 | 4>>
-  handleFilter: (formFilter: any) => void
   loading?: boolean
+  handleFilter: (formFilter: any) => void
+  setCurrentStep: React.Dispatch<React.SetStateAction<1 | 2 | 3 | 4>>
   currentStep?: 1 | 2 | 3 | 4
 }
 
-const Filter = ({ setCurrentStep, handleFilter, loading, currentStep }: IFilterProps) => {
+const Filter = ({ setCurrentStep, handleFilter, loading }: IFilterProps) => {
   const [equipmentSelected, setEquipmentSelected] = useState<string | null>(null)
   const [analysisCondition, setAnalysisCondition] = useState<any | null>(null)
   const [dgaState, setDgaState] = useState({
@@ -24,19 +24,17 @@ const Filter = ({ setCurrentStep, handleFilter, loading, currentStep }: IFilterP
     values: DGA_INITIAL_FILTER_SAMPLE_DATA
   })
 
-  const isValid = equipmentSelected && analysisCondition && dgaState.values.length > 0
-
   const isAnalysisConditionValid = (condition: any) => {
     if (!condition) return false
     const keys = ['baseDate', 'historyPeriod', 'algorithm', 'analysisMode']
     return keys.every((key) => condition[key] !== null && condition[key] !== undefined && condition[key] !== '')
   }
 
+  const isValid = equipmentSelected && isAnalysisConditionValid(analysisCondition) && dgaState.values.length > 0
+
   // Cập nhật step tự động dựa vào dữ liệu
   useEffect(() => {
-    if (equipmentSelected && isAnalysisConditionValid(analysisCondition) && dgaState.values.length > 0) {
-      setCurrentStep(3)
-    } else if (equipmentSelected) {
+    if (equipmentSelected || (isAnalysisConditionValid(analysisCondition) && dgaState.values.length > 0)) {
       setCurrentStep(2)
     } else {
       setCurrentStep(1)
@@ -54,6 +52,17 @@ const Filter = ({ setCurrentStep, handleFilter, loading, currentStep }: IFilterP
       handleFilter(formFilter)
     }
   }
+
+  useEffect(() => {
+    if (!equipmentSelected) {
+      setAnalysisCondition(null)
+
+      setDgaState({
+        listInitial: DGA_INITIAL_FILTER_SAMPLE_DATA,
+        values: DGA_INITIAL_FILTER_SAMPLE_DATA
+      })
+    }
+  }, [equipmentSelected])
 
   // Reset DGA khi analysisCondition thay đổi
   useEffect(() => {
@@ -93,7 +102,7 @@ const Filter = ({ setCurrentStep, handleFilter, loading, currentStep }: IFilterP
       <div>
         <Button
           className={cn(
-            'bg-[#0062FF] h-[50px] rouned-[10px] !gap-2.5 w-full',
+            'bg-[#0062FF] h-[50px] rounded-[10px] !gap-2.5 w-full',
             !isValid && 'pointer-events-none bg-[#CED3E4]',
             loading && 'pointer-events-none bg-[#CED3E4]'
           )}

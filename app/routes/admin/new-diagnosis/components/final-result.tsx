@@ -11,9 +11,11 @@ import SummaryInformation from './results/summary-information'
 interface IFinalResultProps {
   response?: any
   finalFilter?: any
+  setCurrentStep?: React.Dispatch<React.SetStateAction<1 | 2 | 3 | 4>>
+  currentStep?: 1 | 2 | 3 | 4
 }
 
-const FinalResult = ({ response, finalFilter }: IFinalResultProps) => {
+const FinalResult = ({ response, finalFilter, setCurrentStep, currentStep }: IFinalResultProps) => {
   const [yearSlideValue, setYearSlideValue] = useState<number | null>(null)
   return (
     <div className='p-5 flex-1 bg-[#F1F4F7] space-y-[15px]'>
@@ -32,7 +34,7 @@ const FinalResult = ({ response, finalFilter }: IFinalResultProps) => {
       {/* History and AI Chat */}
       <div className='grid grid-cols-2 gap-[15px]'>
         <HistoryTimeline response={response} finalFilter={finalFilter} />
-        <AIChatAgent response={response} />
+        <AIChatAgent response={response} currentStep={currentStep} setCurrentStep={setCurrentStep} />
       </div>
 
       {/* Source basic judgment */}

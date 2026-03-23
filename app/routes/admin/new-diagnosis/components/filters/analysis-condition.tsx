@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Select from 'react-select'
 import { DATA, TRANSLATE_KEYS } from '~/constants'
@@ -12,7 +12,7 @@ interface IAnalysisConditionProps {
   disabled?: boolean
 }
 
-const AnalysisCondition = ({ setAnalysisCondition, disabled }: IAnalysisConditionProps) => {
+const AnalysisCondition = ({ analysisCondition, setAnalysisCondition, disabled }: IAnalysisConditionProps) => {
   const [formValues, setFormValues] = useState({
     baseDate: null,
     historyPeriod: null,
@@ -33,7 +33,16 @@ const AnalysisCondition = ({ setAnalysisCondition, disabled }: IAnalysisConditio
     setAnalysisCondition(newFormValues)
   }
 
-  // console.log('all result', Object.values(formValues))
+  useEffect(() => {
+    if (!analysisCondition) {
+      setFormValues({
+        baseDate: null,
+        historyPeriod: null,
+        algorithm: null,
+        analysisMode: null
+      })
+    }
+  }, [analysisCondition])
 
   return (
     <div className='space-y-2.5'>

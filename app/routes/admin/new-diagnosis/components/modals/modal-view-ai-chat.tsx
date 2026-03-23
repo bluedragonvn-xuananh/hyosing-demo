@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { RobotAiIcon } from '~/assets/icons'
 import {
@@ -11,7 +11,7 @@ import {
 } from '~/components/ui/dialog'
 import type { IChatMessage } from '~/types/models/chat-ai-agent.model'
 
-import AiGenerationMessage from '../ai-generation-chat/ai-generation-message'
+import ChatCore from '../ai-generation-chat/chat-core'
 import FormPromptMessage from '../ai-generation-chat/form-prompt-message'
 
 interface ModalViewAiChatProps {
@@ -22,28 +22,48 @@ interface ModalViewAiChatProps {
   response?: any
   setIsModalViewChat?: React.Dispatch<React.SetStateAction<boolean>>
   isModalViewChat?: boolean
+  currentStep?: 1 | 2 | 3 | 4
+  setCurrentStep?: React.Dispatch<React.SetStateAction<1 | 2 | 3 | 4>>
 }
 
 const ModalViewAiChat = ({
   open,
   onOpenChange,
-  setListMessagePrompt,
-  listMessagePrompt,
   response,
   setIsModalViewChat,
-  isModalViewChat
+  isModalViewChat,
+  listMessagePrompt,
+  setListMessagePrompt,
+  currentStep,
+  setCurrentStep
 }: ModalViewAiChatProps) => {
   const [modalMessages, setModalMessages] = useState<IChatMessage[]>([])
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+  const bottomRef = useRef<HTMLDivElement | null>(null)
 
   const handleOnOpenChange = () => {
+    // Sync message from modal to main
+    if (modalMessages.length) {
+      setListMessagePrompt(modalMessages)
+    }
     onOpenChange(false)
   }
 
   useEffect(() => {
-    if (open) {
-      setModalMessages(listMessagePrompt)
-    }
-  }, [open])
+    if (!open) return
+    setModalMessages([...listMessagePrompt])
+  }, [open, listMessagePrompt])
+
+  useEffect(() => {
+    if (!open) return
+    if (!modalMessages.length) return
+
+    requestAnimationFrame(() => {
+      bottomRef.current?.scrollIntoView({
+        behavior: modalMessages.length > listMessagePrompt.length ? 'smooth' : 'auto'
+      })
+    })
+  }, [modalMessages, open])
 
   return (
     <Dialog open={open} onOpenChange={handleOnOpenChange}>
@@ -82,9 +102,12 @@ const ModalViewAiChat = ({
             {/* Content */}
             <div className='flex-1 flex flex-col gap-[15px] h-[409px]'>
               <div className='flex-1 relative grow-1 h-full px-5'>
-                <div className='absolute inset-[0_2px_0_2px] px-[8px] overflow-x-hidden overflow-y-auto pb-4 scrollbar__small__custom'>
+                <div
+                  ref={scrollRef}
+                  className='absolute inset-[0_2px_0_2px] px-[8px] overflow-x-hidden overflow-y-auto pb-4 scrollbar__small__custom'
+                >
                   {/* Without message */}
-                  {!listMessagePrompt.length && (
+                  {!modalMessages.length && (
                     <div className='flex-1 flex justify-center items-center h-full'>
                       <p className='font-light text-sm leading-5 -tracking-[0.5%] text-[#959595] text-center'>
                         대화내역이 없습니다.
@@ -94,17 +117,23 @@ const ModalViewAiChat = ({
                     </div>
                   )}
 
-                  {modalMessages.length > 0 && <AiGenerationMessage listMessagePrompt={modalMessages} />}
-                  {/* {listMessagePrompt.length > 0 && <AiGenerationMessage listMessagePrompt={listMessagePrompt} />} */}
+                  {modalMessages.length > 0 && (
+                    <>
+                      <ChatCore messages={modalMessages} setMessages={setModalMessages} />
+                      <div ref={bottomRef} />
+                    </>
+                  )}
                 </div>
               </div>
 
               <div className='mt-auto'>
                 <FormPromptMessage
-                  setListMessagePrompt={setListMessagePrompt}
+                  setListMessagePrompt={setModalMessages}
                   response={response}
                   setIsModalViewChat={setIsModalViewChat}
                   isModalViewChat={isModalViewChat}
+                  currentStep={currentStep}
+                  setCurrentStep={setCurrentStep}
                 />
               </div>
             </div>

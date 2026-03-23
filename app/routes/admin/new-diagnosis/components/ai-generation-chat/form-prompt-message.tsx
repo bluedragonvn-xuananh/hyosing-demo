@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -16,18 +16,14 @@ interface FormPromptMessageProps {
   response?: any
   setIsModalViewChat?: React.Dispatch<React.SetStateAction<boolean>>
   isModalViewChat?: boolean
+  currentStep?: 1 | 2 | 3 | 4
+  setCurrentStep?: React.Dispatch<React.SetStateAction<1 | 2 | 3 | 4>>
 }
 
-const FormPromptMessage = ({
-  setListMessagePrompt,
-  response,
-  setIsModalViewChat,
-  isModalViewChat
-}: FormPromptMessageProps) => {
+const FormPromptMessage = ({ setListMessagePrompt, response, setCurrentStep, currentStep }: FormPromptMessageProps) => {
   const [isTyping, setIsTyping] = useState<boolean>(false)
   const formSchema = chatAIPromptMessage()
   const { checkMessageQuestionFromOS, responseMessageBaseOnQuestionFromOS } = useChatAiAgent()
-  const abortRef = useRef<AbortController | null>(null)
 
   const form = useForm<AIPromptMessageType>({
     resolver: zodResolver(formSchema),
@@ -41,11 +37,11 @@ const FormPromptMessage = ({
     const messageContent = formData.promptMessage?.trim()
     if (!messageContent) return
 
-    if (isTyping) return
-
-    if (isModalViewChat && setIsModalViewChat) {
-      setIsModalViewChat(false)
+    if (currentStep === 3 && setCurrentStep) {
+      setCurrentStep(4)
     }
+
+    if (isTyping) return
 
     setIsTyping(true)
 
@@ -140,20 +136,6 @@ const FormPromptMessage = ({
                 <FormItem className='flex-1'>
                   <div className='relative'>
                     <FormControl>
-                      {/* <Textarea
-                        placeholder='내용을 입력하세요.'
-                        className='h-[200px] focus-visible:ring-0 placeholder:text-(--gray-06) rounded-[4px]'
-                        {...field}
-                        onKeyDown={(e) => {
-                          if (e.nativeEvent.isComposing) return
-
-                          if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault()
-                            form.handleSubmit(onSubmit)()
-                          }
-                        }}
-                      /> */}
-
                       <Input
                         {...field}
                         placeholder='내용을 입력하세요.'

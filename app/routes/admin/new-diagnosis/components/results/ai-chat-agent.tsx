@@ -2,20 +2,21 @@ import { useEffect, useRef, useState } from 'react'
 
 import { ExpandIcon, RobotAiIcon } from '~/assets/icons'
 import { ANSWER_OS_MESSAGE, DEFAULT_CONTENT_ANSWER, OLTC_CONTENT_ANSWER } from '~/constants/chat-ai.constant'
-import { RESPONSE_SAMPLE_DATA } from '~/constants/hyosung-api.contant'
 import { commonHelper } from '~/helpers'
 import { cn } from '~/lib/utils'
 import { type IChatMessage } from '~/types/models/chat-ai-agent.model'
 
-import AiGenerationMessage from '../ai-generation-chat/ai-generation-message'
+import ChatCore from '../ai-generation-chat/chat-core'
 import FormPromptMessage from '../ai-generation-chat/form-prompt-message'
 import ModalViewAiChat from '../modals/modal-view-ai-chat'
 
 interface AIChatAgentProps {
   response?: any
+  setCurrentStep?: React.Dispatch<React.SetStateAction<1 | 2 | 3 | 4>>
+  currentStep?: 1 | 2 | 3 | 4
 }
 
-const AIChatAgent = ({ response }: AIChatAgentProps) => {
+const AIChatAgent = ({ response, currentStep, setCurrentStep }: AIChatAgentProps) => {
   const [listMessagePrompt, setListMessagePrompt] = useState<IChatMessage[]>([])
   const [isModalViewChat, setIsModalViewChat] = useState<boolean>(false)
   const scrollRef = useRef<HTMLDivElement | null>(null)
@@ -40,6 +41,8 @@ const AIChatAgent = ({ response }: AIChatAgentProps) => {
   useEffect(() => {
     if (!listMessagePrompt.length) return
     if (hasStreamedRef.current) return
+    // Prevent steaming again when open modal view chat
+    if (isModalViewChat) return
 
     const firstMessage = listMessagePrompt[0]
     if (!firstMessage?.isStreaming) return
@@ -73,7 +76,7 @@ const AIChatAgent = ({ response }: AIChatAgentProps) => {
           prev.map((msg) => (msg.id === firstMessage.id ? { ...msg, isStreaming: false } : msg))
         )
       })
-  }, [listMessagePrompt])
+  }, [listMessagePrompt, isModalViewChat])
 
   return (
     <>
@@ -113,12 +116,19 @@ const AIChatAgent = ({ response }: AIChatAgentProps) => {
                 </div>
               )}
 
-              {listMessagePrompt.length > 0 && <AiGenerationMessage listMessagePrompt={listMessagePrompt} />}
+              {listMessagePrompt.length > 0 && (
+                <ChatCore messages={listMessagePrompt} setMessages={setListMessagePrompt} />
+              )}
             </div>
           </div>
 
           <div className='mt-auto'>
-            <FormPromptMessage setListMessagePrompt={setListMessagePrompt} response={response} />
+            <FormPromptMessage
+              setListMessagePrompt={setListMessagePrompt}
+              response={response}
+              currentStep={currentStep}
+              setCurrentStep={setCurrentStep}
+            />
           </div>
         </div>
       </div>
@@ -127,11 +137,13 @@ const AIChatAgent = ({ response }: AIChatAgentProps) => {
       <ModalViewAiChat
         open={isModalViewChat}
         onOpenChange={setIsModalViewChat}
+        response={response}
         listMessagePrompt={listMessagePrompt}
         setListMessagePrompt={setListMessagePrompt}
-        response={response}
         setIsModalViewChat={setIsModalViewChat}
         isModalViewChat={isModalViewChat}
+        currentStep={currentStep}
+        setCurrentStep={setCurrentStep}
       />
     </>
   )

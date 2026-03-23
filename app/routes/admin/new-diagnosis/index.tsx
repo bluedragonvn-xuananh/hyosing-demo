@@ -18,7 +18,7 @@ const NewDiagnosisPage = () => {
     setLoading(true)
     setFinalFilter(formFilter)
     await commonHelper.fakeAPIRequest(1500)
-    setCurrentStep(4) // default
+    setCurrentStep(3) // default
     setResponse(RESPONSE_SAMPLE_DATA)
     setLoading(false)
   }
@@ -35,7 +35,12 @@ const NewDiagnosisPage = () => {
           loading={loading}
         />
         {/* Result */}
-        <FinalResult response={response} finalFilter={finalFilter} />
+        <FinalResult
+          response={response}
+          finalFilter={finalFilter}
+          currentStep={currentStep}
+          setCurrentStep={setCurrentStep}
+        />
       </div>
 
       {loading && <LoaderGlobal />}
