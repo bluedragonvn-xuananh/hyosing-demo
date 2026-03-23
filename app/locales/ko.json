@@ -1,0 +1,118 @@
+{
+  "common": {
+    "product": "Sản phẩm",
+    "searchResults": "검색 결과",
+    "noResult": "결과가 없습니다",
+    "noData": "데이터 없음"
+  },
+  "sidebarMenu": {
+    "dashboard": "대시보드",
+    "equipmentHistory": "설비 이력",
+    "newDiagnosis": "신규 진단",
+    "trendAnalysis": "트렌드 분석",
+    "chatAgent": "Chat Agent",
+    "reportGeneration": "보고서 생성"
+  },
+  "inputLabel": {
+    "id": "아이디",
+    "password": "비밀번호",
+    "note": "비고",
+    "employerManagement": {
+      "filter": {}
+    }
+  },
+  "inputPlaceholder": {
+    "id": "아이디를 입력하세요.",
+    "password": "비밀번호를 입력하세요.",
+    "note": "내용 입력",
+    "pleaseSelect": "선택해 주세요",
+    "employerManagement": {
+      "filter": {
+        "emailOrCompany": "이메일 혹은 업체명을 입력하세요."
+      }
+    }
+  },
+  "inputValidate": {
+    "fieldCannotBeEmpty": "이 정보는 필수입니다"
+  },
+  "enums": {
+    "language": {
+      "vi": "Vietnamese",
+      "en": "English",
+      "ko": "한국어"
+    },
+    "employerManagement": {
+      "employerStatus": {
+        "normal": "정상",
+        "inProgress": "진행 중"
+      }
+    },
+    "yarnType": {
+      "spunYarn": "방적사",
+      "dty": "DTY(포리)",
+      "spandex": "스판",
+      "other": "기타"
+    },
+    "table": {
+      "yarnCode": {
+        "yarnType": "원사구분",
+        "yarnName": "원사명",
+        "yarnColor": "원사 색상",
+        "notes": "비고",
+        "dateOfRegistration": "등록일",
+        "editOrDelete": "수정 / 삭제"
+      }
+    }
+  },
+  "label": {
+    "yarnType": "원사구분",
+    "yarnName": "원사명",
+    "yarnColor": "원사 색상",
+    "newYarnClassification": "새 원사 구분",
+    "search": "검색"
+  },
+  "title": {
+    "newRegistrationOfYarn": "원사 (원자재)  신규등록 ",
+    "employerManagementListing": "고용주 관리",
+    "employerManagementDetail": "고용주 상세 정보"
+  },
+  "action": {
+    "login": "로그인",
+    "search": "검색",
+    "deleteSelection": "선택 삭제",
+    "settingYarnClassification": "원사구분 설정",
+    "newRegistration": "신규 등록",
+    "cancel": "취소",
+    "check": "확인",
+    "ok": "확인",
+    "reset": "초기화"
+  },
+  "confirm": {
+    "areYouSureYouWantToDeleteIt": "정말 삭제하시겠어요?"
+  },
+  "msg": {
+    "changeLanguageSuccess": "Change language success !"
+  },
+  "table": {
+    "employerManagement": {
+      "employerNumber": "고용주 번호",
+      "email": "이메일",
+      "contact": "연락처",
+      "representativeName": "대표자명",
+      "numberAffiliatedCompany": "소속 업체 수",
+      "numberAffiliatedWorkLocation": "소속 근무지 수",
+      "totalEmployees": "총 직원 수",
+      "status": "상태",
+      "dateRegistration": "가입일시"
+    },
+    "employerCompanyWorker": {
+      "workLocation": "근무지명",
+      "workAddress": "근무지주소",
+      "contact": "연락처",
+      "payDate": "급여지급일",
+      "totalEmployees": "총 직원 수",
+      "status": "상태",
+      "dateRegistration": "등록일시"
+    }
+  }
+}

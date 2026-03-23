@@ -1,0 +1,5 @@
+export { default as AuthBgImage } from './auth-bg.png'
+export { default as LoadingImage } from './loading.png'
+export { default as NarutoImage } from './naruto.png'
+export { default as AdminThumbImage } from './admin-thumb.png'
+export { default as AdminLogo } from './admin-logo.png'
